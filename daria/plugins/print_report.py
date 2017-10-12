@@ -1,8 +1,10 @@
+from __future__ import unicode_literals
+
 import sys
-from ..plugin import AbstractPlugin
+from ..plugin import Plugin
 
 
-class PrintReport(AbstractPlugin):
+class PrintReport(Plugin):
     name = 'print_report'
 
     def __init__(self, entries, out=sys.stdout):
