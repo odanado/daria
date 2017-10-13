@@ -1,7 +1,6 @@
 import time
 
 import torch
-from torch.autograd import Variable
 
 
 class Trainer(object):
@@ -46,29 +45,24 @@ class Trainer(object):
         self._reset_metrics()
 
         for batch in self.train_iter:
-            data, target = self.converter(batch, self.device)
-            self.optimizer.zero_grad()
-            answer = self.model(data)
-            y_true = target.data.cpu().numpy()
-            y_pred = torch.max(answer, dim=1)[1].data.cpu().numpy()
-
-            loss = self.criterion(answer, target)
-            loss.backward()
-            self.optimizer.step()
-            self._update_metrics(loss.data[0], y_true, y_pred)
+            loss, y_true, y_pred = self._one_iter(batch)
+            self._update_metrics(loss, y_true, y_pred)
 
         self._store_metrics()
 
-    def _to_numpy(self, x):
-        if self._is_cuda():
-            x = x.cpu()
-        if isinstance(x, Variable):
-            return x.data.numpy()
-        if torch.is_tensor(x):
-            return x.numpy()
+    def _one_iter(self, batch):
+        data, target = self.converter(batch, self.device)
+        self.optimizer.zero_grad()
+        answer = self.model(data)
 
-        raise TypeError(
-            'x should be Tensor or Variable. get {}'.format(type(x)))
+        loss = self.criterion(answer, target)
+        loss.backward()
+        self.optimizer.step()
+
+        y_true = target
+        y_pred = torch.max(answer, dim=1)[1]
+
+        return loss, y_true, y_pred
 
     def _reset_metrics(self):
         for m in self.metrics:

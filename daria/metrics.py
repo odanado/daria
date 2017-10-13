@@ -16,7 +16,7 @@ class Accuracy(AbstractMetrics):
     name = 'accuracy'
 
     def update(self, loss, y_true, y_pred):
-        self.n_correct += (y_true == y_pred).sum()
+        self.n_correct += (y_true == y_pred).sum().data[0]
         self.n_total += len(y_true)
 
     def score(self):
@@ -31,7 +31,7 @@ class Loss(AbstractMetrics):
     name = 'loss'
 
     def update(self, loss, y_true, y_pred):
-        self.sum_loss += loss
+        self.sum_loss += loss.data[0]
         self.n_total += 1
 
     def score(self):
