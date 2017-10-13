@@ -2,3 +2,4 @@
 [![Coverage Status](https://coveralls.io/repos/github/odanado/daria/badge.svg?branch=master)](https://coveralls.io/github/odanado/daria?branch=master)
 
 # daria
+pytorch trainer
