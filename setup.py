@@ -9,6 +9,7 @@ setup(
     url='https://github.com/odanado/daria',
     license='MIT License',
     packages=['daria'],
+    install_requires=['slackweb'],
     tests_require=['mock'],
     test_suite='tests',
 )
