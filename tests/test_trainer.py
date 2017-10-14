@@ -50,11 +50,20 @@ class TestTrainer(unittest.TestCase):
         trainer._one_step()
 
         trainer.model.train.assert_called_once()
-        trainer._reset_metrics.assert_called()
+        # trainer._reset_metrics.assert_called()
         trainer._one_iter.assert_any_call((1, 2))
         trainer._one_iter.assert_any_call((10, 20))
-        trainer._update_metrics.assert_called_with(0, 1, 2)
-        trainer._store_metrics.assert_called_once()
+        # trainer._update_metrics.assert_called_with(0, 1, 2)
+        # trainer._store_metrics.assert_called_once()
+
+        for m in self.metrics_mock:
+            m.reset.assert_called_once()
+
+        for m in self.metrics_mock:
+            m.update.assert_called_with(0, 1, 2)
+
+        for m in self.metrics_mock:
+            m.score.assert_called_once()
 
     def test_one_iter(self):
         trainer = self.trainer
@@ -76,29 +85,3 @@ class TestTrainer(unittest.TestCase):
         trainer.optimizer.step.assert_called_once()
 
         self.assertEqual(loss, loss_mock)
-
-    def test_reset_metrics(self):
-        trainer = self.trainer
-
-        trainer._reset_metrics()
-
-        for m in self.metrics_mock:
-            m.reset.assert_called_once()
-
-    def test_update_metrics(self):
-        trainer = self.trainer
-
-        trainer._update_metrics(1, 2, 3)
-
-        for m in self.metrics_mock:
-            m.update.assert_called_once_with(1, 2, 3)
-
-    def test_store_metrics(self):
-        trainer = self.trainer
-
-        trainer._store_metrics()
-
-        for m in self.metrics_mock:
-            m.score.assert_called_once()
-        self.assertEqual(trainer.history['mock0'][0], 0)
-        self.assertEqual(trainer.history['mock1'][0], 10)

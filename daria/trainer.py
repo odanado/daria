@@ -2,6 +2,8 @@ import time
 
 import torch
 
+from .metrics import _reset_metrics, _update_metrics, _store_metrics
+
 
 class Trainer(object):
     def __init__(self, model, optimizer, criterion, train_iter,
@@ -26,6 +28,9 @@ class Trainer(object):
         self._start_time = None
 
     def run(self, epochs):
+        for plugin in self.plugins:
+            plugin.prepare(self)
+
         if self._start_time is None:
             self._start_time = time.time()
 
@@ -42,13 +47,13 @@ class Trainer(object):
             self.train_iter.init_epoch()
 
         self.model.train()
-        self._reset_metrics()
+        _reset_metrics(self.metrics)
 
         for batch in self.train_iter:
             loss, y_true, y_pred = self._one_iter(batch)
-            self._update_metrics(loss, y_true, y_pred)
+            _update_metrics(self.metrics, loss, y_true, y_pred)
 
-        self._store_metrics()
+        _store_metrics(self.metrics, self.history)
 
     def _one_iter(self, batch):
         data, target = self.converter(batch, self.device)
@@ -63,18 +68,3 @@ class Trainer(object):
         y_pred = torch.max(answer, dim=1)[1]
 
         return loss, y_true, y_pred
-
-    def _reset_metrics(self):
-        for m in self.metrics:
-            m.reset()
-
-    def _update_metrics(self, loss, y_true, y_pred):
-        for m in self.metrics:
-            m.update(loss, y_true, y_pred)
-
-    def _store_metrics(self):
-        for m in self.metrics:
-            if m.name not in self.history:
-                self.history[m.name] = []
-
-            self.history[m.name].append(m.score())
