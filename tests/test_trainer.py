@@ -85,3 +85,17 @@ class TestTrainer(unittest.TestCase):
         trainer.optimizer.step.assert_called_once()
 
         self.assertEqual(loss, loss_mock)
+
+    def test_state_dict(self):
+        self.model_mock.state_dict.return_value = 10
+        self.optimizer_mock.state_dict.return_value = 20
+        self.trainer._start_time = time.time()
+
+        time.sleep(0.01)
+        checkpoint = self.trainer.state_dict()
+        time.sleep(0.1)
+
+        self.trainer.load_state_dict(checkpoint)
+
+        self.assertGreater(time.time() - self.trainer._start_time, 0.01)
+        self.assertLess(time.time() - self.trainer._start_time, 0.1)

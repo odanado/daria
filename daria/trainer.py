@@ -68,3 +68,18 @@ class Trainer(object):
         y_pred = torch.max(answer, dim=1)[1]
 
         return loss, y_true, y_pred
+
+    def state_dict(self):
+        checkpoint = {}
+        checkpoint['model'] = self.model.state_dict()
+        checkpoint['optimizer'] = self.optimizer.state_dict()
+        checkpoint['history'] = self.history
+        checkpoint['start_time'] = time.time() - self._start_time
+
+        return checkpoint
+
+    def load_state_dict(self, checkpoint):
+        self.model.load_state_dict(checkpoint['model'])
+        self.optimizer.load_state_dict(checkpoint['optimizer'])
+        self.history = checkpoint['history']
+        self._start_time = time.time() - checkpoint['start_time']
