@@ -90,12 +90,17 @@ class TestTrainer(unittest.TestCase):
         self.model_mock.state_dict.return_value = 10
         self.optimizer_mock.state_dict.return_value = 20
         self.trainer._start_time = time.time()
+        self.trainer.init_epoch = 10
 
         time.sleep(0.01)
         checkpoint = self.trainer.state_dict()
         time.sleep(0.1)
 
+        self.trainer = Trainer(self.model_mock, self.optimizer_mock,
+                               self.criterion_mock, self.train_iter_mock,
+                               self.converter_mock, metrics=self.metrics_mock)
         self.trainer.load_state_dict(checkpoint)
 
         self.assertGreater(time.time() - self.trainer._start_time, 0.01)
         self.assertLess(time.time() - self.trainer._start_time, 0.1)
+        self.assertEqual(self.trainer.init_epoch, 10)

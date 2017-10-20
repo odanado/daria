@@ -75,6 +75,7 @@ class Trainer(object):
         checkpoint['optimizer'] = self.optimizer.state_dict()
         checkpoint['history'] = self.history
         checkpoint['start_time'] = time.time() - self._start_time
+        checkpoint['init_epoch'] = self.init_epoch
 
         return checkpoint
 
@@ -83,3 +84,4 @@ class Trainer(object):
         self.optimizer.load_state_dict(checkpoint['optimizer'])
         self.history = checkpoint['history']
         self._start_time = time.time() - checkpoint['start_time']
+        self.init_epoch = checkpoint['init_epoch']
