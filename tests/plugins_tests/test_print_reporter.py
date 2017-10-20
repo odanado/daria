@@ -5,10 +5,10 @@ from daria import plugins
 import io
 
 
-class TestPrintReport(unittest.TestCase):
+class TestPrintReporter(unittest.TestCase):
     def setUp(self):
         self.out = io.StringIO()
-        self.print_report = plugins.PrintReport(
+        self.print_reporter = plugins.PrintReporter(
             ['time', 'epoch'], out=self.out)
 
     def test_call(self):
@@ -18,7 +18,7 @@ class TestPrintReport(unittest.TestCase):
             'epoch': [0]
         }
 
-        self.print_report(trainer_mock)
+        self.print_reporter(trainer_mock)
         lines = self.out.getvalue().split('\n')
         self.assertEqual(list(map(int, lines[1].split())), [0, 0])
 

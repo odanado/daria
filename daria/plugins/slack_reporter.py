@@ -4,7 +4,7 @@ import os
 import io
 import slackweb
 
-from . import PrintReport
+from . import PrintReporter
 
 
 class SlackIO(io.StringIO):
@@ -23,16 +23,16 @@ class SlackIO(io.StringIO):
                           username=self.username, icon_emoji=":sushi:")
 
 
-class SlackReport(PrintReport):
-    name = 'slack_report'
+class SlackReporter(PrintReporter):
+    name = 'slack_reporter'
 
     def __init__(self, entries, url, username=None):
         self.out = SlackIO(url, username=username)
-        super(SlackReport, self).__init__(entries, out=self.out)
+        super(SlackReporter, self).__init__(entries, out=self.out)
 
         self.header_org = self.header
 
     def __call__(self, trainer):
         self.header = self.header_org
-        super(SlackReport, self).__call__(trainer)
+        super(SlackReporter, self).__call__(trainer)
         self.out.truncate(0)

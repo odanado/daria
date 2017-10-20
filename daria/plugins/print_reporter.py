@@ -4,8 +4,8 @@ import sys
 from ..plugin import Plugin
 
 
-class PrintReport(Plugin):
-    name = 'print_report'
+class PrintReporter(Plugin):
+    name = 'print_reporter'
 
     def __init__(self, entries, out=sys.stdout):
         self.entries = entries

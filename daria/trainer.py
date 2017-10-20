@@ -28,9 +28,6 @@ class Trainer(object):
         self._start_time = None
 
     def run(self, epochs):
-        for plugin in self.plugins:
-            plugin.prepare(self)
-
         if self._start_time is None:
             self._start_time = time.time()
 

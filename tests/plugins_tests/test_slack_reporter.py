@@ -6,13 +6,14 @@ import io
 
 
 from daria import plugins
-from daria.plugins.slack_report import SlackIO
+from daria.plugins.slack_reporter import SlackIO
 
 
-class TestSlackReport(unittest.TestCase):
+class TestSlackReporter(unittest.TestCase):
     def setUp(self):
-        self.slack_report = plugins.SlackReport(['time', 'epoch'], url=None)
-        self.slack_report.out = io.StringIO()
+        self.slack_reporter = \
+            plugins.SlackReporter(['time', 'epoch'], url=None)
+        self.slack_reporter.out = io.StringIO()
 
         self.slack_io = SlackIO(url=None)
         self.slack_io.slack = mock.MagicMock()
@@ -26,9 +27,9 @@ class TestSlackReport(unittest.TestCase):
             text='```\npoyo```', username=slack_io.username,
             icon_emoji=':sushi:')
 
-    def test_slack_report(self):
-        slack_report = self.slack_report
+    def test_slack_reporter(self):
+        slack_reporter = self.slack_reporter
         trainer_mock = mock.MagicMock()
         trainer_mock.history = {'time': [0], 'epoch': [0]}
 
-        slack_report(trainer_mock)
+        slack_reporter(trainer_mock)

@@ -7,28 +7,17 @@ from ..metrics import _reset_metrics, _update_metrics, _store_metrics
 
 
 class Evaluate(Plugin):
-    name = 'evaluate'
+    name = 'evaluator'
     prefix = 'dev'
 
-    def __init__(self, dev_iter, model=None, criterion=None,
-                 converter=None, device=None):
+    def __init__(self, model, criterion, dev_iter,
+                 converter, device=None, metrics=[]):
         self.dev_iter = dev_iter
         self.model = model
         self.criterion = criterion
         self.converter = converter
         self.device = device
-
-    def prepare(self, trainer):
-        if self.model is None:
-            self.model = trainer.model
-
-        if self.criterion is None:
-            self.criterion = trainer.criterion
-
-        if self.converter is None:
-            self.converter = trainer.converter
-
-        self.metrics = copy.deepcopy(trainer.metrics)
+        self.metrics = copy.deepcopy(metrics)
         for m in self.metrics:
             m.name = self.prefix + '/' + m.name
 
