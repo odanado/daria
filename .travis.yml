@@ -32,3 +32,8 @@ script:
 
 after_success:
     - coveralls
+
+cache:
+    apt: true
+    directories:
+        - $HOME/.cache/pip
