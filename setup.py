@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='daria',
@@ -8,7 +8,7 @@ setup(
     author_email='odan3240@gmail.com',
     url='https://github.com/odanado/daria',
     license='MIT License',
-    packages=['daria'],
+    packages=find_packages(exclude=['tests', 'tests.*']),
     install_requires=['slackweb'],
     tests_require=['mock'],
     test_suite='tests',
