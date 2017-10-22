@@ -22,6 +22,7 @@ class Trainer(object):
             'epoch': []
         }
         self.init_epoch = 0
+        self.epoch = self.iteration = 0
 
         self.train_iter.repeat = False
 
@@ -72,7 +73,8 @@ class Trainer(object):
         checkpoint['optimizer'] = self.optimizer.state_dict()
         checkpoint['history'] = self.history
         checkpoint['start_time'] = time.time() - self._start_time
-        checkpoint['init_epoch'] = self.init_epoch
+        checkpoint['epoch'] = self.epoch
+        checkpoint['iteration'] = self.iteration
 
         return checkpoint
 
@@ -81,4 +83,5 @@ class Trainer(object):
         self.optimizer.load_state_dict(checkpoint['optimizer'])
         self.history = checkpoint['history']
         self._start_time = time.time() - checkpoint['start_time']
-        self.init_epoch = checkpoint['init_epoch']
+        self.init_epoch = self.epoch = checkpoint['epoch']
+        self.iteration = checkpoint['iteration']

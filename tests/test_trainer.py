@@ -90,7 +90,7 @@ class TestTrainer(unittest.TestCase):
         self.model_mock.state_dict.return_value = 10
         self.optimizer_mock.state_dict.return_value = 20
         self.trainer._start_time = time.time()
-        self.trainer.init_epoch = 10
+        self.trainer.epoch = 10
 
         time.sleep(0.01)
         checkpoint = self.trainer.state_dict()
