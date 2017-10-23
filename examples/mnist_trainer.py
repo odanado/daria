@@ -89,9 +89,12 @@ def main(args):
     metrics_list.append(metrics.Loss())
 
     plugin_list = []
-    plugin_list.append(plugins.Evaluate(test_loader, model=model))
+    plugin_list.append(plugins.Evaluator(
+        model, criterion, test_loader,
+        converters.tuple_converter, metrics=metrics_list))
     entries = ['time', 'epoch', 'loss', 'accuracy', 'dev/loss', 'dev/accuracy']
-    plugin_list.append(plugins.PrintReport(entries))
+    plugin_list.append(plugins.PrintReporter(entries))
+    plugin_list.append(plugins.Checkpoint('results', 'dev/loss', 'min'))
     if url:
         plugin_list.append(plugins.SlackReport(entries, url=url))
 

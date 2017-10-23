@@ -6,7 +6,7 @@ from ..plugin import Plugin
 from ..metrics import _reset_metrics, _update_metrics, _store_metrics
 
 
-class Evaluate(Plugin):
+class Evaluator(Plugin):
     name = 'evaluator'
     prefix = 'dev'
 

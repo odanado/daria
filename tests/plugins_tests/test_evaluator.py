@@ -1,11 +1,11 @@
 import unittest
 import mock
 
-from daria.plugins import Evaluate
+from daria.plugins import Evaluator
 from daria.metrics import Accuracy, Loss
 
 
-class TestEvaluate(unittest.TestCase):
+class TestEvaluator(unittest.TestCase):
     def setUp(self):
         self.dev_iter_mock = mock.MagicMock()
         self.trainer_mock = mock.MagicMock()
@@ -20,9 +20,9 @@ class TestEvaluate(unittest.TestCase):
             m.update = mock.MagicMock()
             m.reset = mock.MagicMock()
 
-        self.evaluator = Evaluate(self.model_mock, self.criterion_mock,
-                                  self.dev_iter_mock, self.converter_mock,
-                                  metrics=self.metrics_mock)
+        self.evaluator = Evaluator(self.model_mock, self.criterion_mock,
+                                   self.dev_iter_mock, self.converter_mock,
+                                   metrics=self.metrics_mock)
 
     def test_call_with_trainer(self):
         evaluator = self.evaluator
