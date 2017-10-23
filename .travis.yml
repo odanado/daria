@@ -37,3 +37,6 @@ cache:
     apt: true
     directories:
         - $HOME/.cache/pip
+
+notifications:
+    email: false
