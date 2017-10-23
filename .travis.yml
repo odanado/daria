@@ -9,12 +9,20 @@ matrix:
 
 before_install:
     - sudo apt-get update
-    - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
-        wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
+    - if test -e $HOME/miniconda/bin; then
+        echo "miniconda already installed.";
       else
-        wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+        echo "Installing miniconda.";
+        rm -rf $HOME/miniconda;
+        mkdir -p $HOME/download;
+        if [[ -d $HOME/download/miniconda.sh ]]; then rm -rf $HOME/download/miniconda.sh; fi;
+        if [ "${MYCONDAPY}" = "2.7" ]; then
+            wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O $HOME/download/miniconda.sh;
+        else
+            wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O $HOME/download/miniconda.sh;
+        fi;
+        bash $HOME/download/miniconda.sh -b -p $HOME/miniconda;
       fi
-    - bash miniconda.sh -b -p $HOME/miniconda
     - export PATH="$HOME/miniconda/bin:$PATH"
     - hash -r
     - conda config --set always_yes yes --set changeps1 no
@@ -33,10 +41,16 @@ script:
 after_success:
     - coveralls
 
+before_cache:
+    - if ! [[ $TRAVIS_TAG ]]; then rm -rf $HOME/miniconda/conda-bld; fi
+    - rm -rf $HOME/miniconda/locks $HOME/miniconda/pkgs $HOME/miniconda/var $HOME/miniconda/conda-meta/history
+
 cache:
     apt: true
     directories:
         - $HOME/.cache/pip
+        - $HOME/miniconda
+        - $HOME/download
 
 notifications:
     email: false
