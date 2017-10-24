@@ -98,9 +98,10 @@ def main(args):
     if url:
         plugin_list.append(plugins.SlackReport(entries, url=url))
 
-    trainer = daria.Trainer(model, optimizer, criterion,
+    updater = daria.Updater(model, optimizer, criterion,
                             train_loader, converters.tuple_converter,
-                            device=0, plugins=plugin_list,
+                            device=0)
+    trainer = daria.Trainer(updater, plugins=plugin_list,
                             metrics=metrics_list)
 
     trainer.run(args.epochs)
