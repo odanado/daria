@@ -14,6 +14,7 @@ class StandardUpdater(BaseStandardUpdater):
         optimizer = self._optimizers['main']
         loss_func = self.loss_func
 
+        optimizer.target.train()
         optimizer.zero_grad()
 
         y_pred = optimizer.target(*in_arrays)
