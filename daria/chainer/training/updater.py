@@ -1,8 +1,6 @@
 from __future__ import division
 
 
-from chainer.dataset import convert
-from chainer.dataset import iterator as iterator_module
 from chainer.training import StandardUpdater as BaseStandardUpdater
 from chainer import reporter
 
